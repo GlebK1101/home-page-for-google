@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<!-- Hatsune Miku | Kasane Teto | Akita Neru | Eleanor Forte | Adachi Rei | Gumi -->
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startseite</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #2196F3;
+            --accent-hover: #1976D2;
+            --border-color: #ddd;
+            --header-bg: #e0e0e0;
+            --tab-inactive: #cfcfcf;
+            --tab-active: #ffffff;
+            --row-odd: #f2f8fd;
+            --row-even: #ffffff;
+            --modal-overlay: rgba(0,0,0,0.5);
+        }
+
+        /* Dunkles Design */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #64b5f6;
+            --accent-hover: #42a5f5;
+            --border-color: #444;
+            --header-bg: #2c2c2c;
+            --tab-inactive: #333;
+            --tab-active: #1e1e1e;
+            --row-odd: #252525;
+            --row-even: #1e1e1e;
+            --modal-overlay: rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Schriftgrößen (Klassen werden dem body zugewiesen) */
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 18px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Kopfzeile --- */
+        .header-bar {
+            background-color: var(--header-bg);
+            /* padding: 10px 10px 0 10px; */
+            display: flex;
+            align-items: flex-end; /* Ausrichtung am unteren Rand des Tabs */
+            /* border-bottom: 1px solid var(--border-color); */
+            gap: 10px;
+            overflow: hidden; /* Damit nichts herausragt */
+        }
+
+        .tabs-container {
+            display: flex;
+            flex: 1; /* Nimmt den gesamten freien Platz ein */
+            overflow-x: auto; /* Horizontales Scrollen */
+            
+            /* Scrollleiste ausblenden */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+
+        /* Scrollleiste für Chrome/Safari/Opera ausblenden */
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Tab (Reiter) */
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: var(--tab-inactive);
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+            transition: background 0.2s;
+            color: var(--text-color);
+            border: 1px solid transparent;
+        }
+
+        .tab.active {
+            background-color: var(--tab-active);
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--tab-active);
+            margin-bottom: -1px; /* Verschmilzt mit dem Inhalt */
+            z-index: 2;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: #dcdcdc;
+        }
+        [data-theme="dark"] .tab:hover:not(.active) {
+            background-color: #444;
+        }
+
+        .tab-settings-icon {
+            font-size: 12px;
+            opacity: 0.5;
+            padding: 2px;
+            border-radius: 3px;
+        }
+        .tab-settings-icon:hover {
+            opacity: 1;
+            background-color: rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] .tab-settings-icon:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* Fixierter Block mit Schaltflächen */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding-bottom: 5px; /* Etwas Abstand unten */
+            flex-shrink: 0; /* Verhindert das Schrumpfen dieses Blocks */
+            background-color: var(--header-bg); /* Hintergrund wie Kopfzeile */
+            z-index: 10;
+        }
+
+        /* Anpassung der Hinzufügen-Schaltfläche, damit sie wie ein Icon aussieht */
+        .add-tab-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            width: 32px; 
+            height: 32px;
+            border-radius: 4px; /* Quadratisch mit Abrundung */
+            cursor: pointer;
+            font-size: 20px;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            line-height: 0;
+        }
+        .add-tab-btn:hover { background-color: var(--accent-hover); }
+
+        .global-settings-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 0;
+            margin: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .global-settings-btn:hover { transform: rotate(30deg); transition: 0.3s; }
+
+        /* --- Inhalt --- */
+        .content-area {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border-radius: 5px;
+            align-items: center;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--container-bg);
+            color: var(--text-color);
+        }
+
+        .btn-primary {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* Tabelle */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; }
+        th { background-color: var(--accent-color); color: white; }
+        
+        tbody tr:nth-child(odd) { background-color: var(--row-odd); }
+        tbody tr:nth-child(even) { background-color: var(--row-even); }
+        
+        a.table-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        a.table-link:hover { text-decoration: underline; }
+
+        .btn-del {
+            background-color: #ff5252; color: white; border: none; padding: 5px 10px;
+            border-radius: 3px; cursor: pointer;
+        }
+
+        /* --- Modal-Fenster --- */
+        .modal-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal {
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal h2 { margin-top: 0; }
+        .modal-close {
+            position: absolute; top: 10px; right: 10px;
+            background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-color);
+        }
+        .setting-group { margin-bottom: 15px; }
+        .setting-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .full-width { width: 100%; box-sizing: border-box; }
+        .btn-block { width: 100%; margin-top: 5px; padding: 10px; }
+        
+        .loading-spinner {
+            display: inline-block; width: 12px; height: 12px;
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            border-top-color: #fff; animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Stile für Tabelle und Benachrichtigungen --- */
+        
+        /* Ausrichtung in der Tabelle */
+        td {
+            vertical-align: middle; /* Vertikale Zentrierung */
+        }
+        
+        /* Klassen für bestimmte Spalten */
+        .col-center { text-align: center; }
+        .col-desc { text-align: justify; } /* Blocksatz für Beschreibungstext */
+        
+        /* Schaltflächen in der Tabelle */
+        .row-actions {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn-icon {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .btn-icon:hover { background-color: rgba(0,0,0,0.1); }
+        [data-theme="dark"] .btn-icon:hover { background-color: rgba(255,255,255,0.2); }
+
+        /* Popup-Benachrichtigungen (Toasts) */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none; /* Damit Klicks hindurchgehen */
+        }
+        
+        .toast {
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+            min-width: 250px;
+            max-width: 350px;
+            font-size: 14px;
+            pointer-events: auto;
+            opacity: 0.95;
+        }
+        
+        .toast.error { background: #d32f2f; color: white; }
+        .toast.success { background: #43a047; color: white; }
+        .toast.warning { background: #ffa000; color: #fff; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 0.95; transform: translateX(0); }
+        }
+
+    </style>
+</head>
+<body class="font-medium">
+
+<div class="container">
+    <div class="header-bar">
+        <div class="tabs-container" id="tabsContainer">
+            <!-- Tabs kommen hierhin -->
+        </div>
+        <!-- Fixierter Bereich für Schaltflächen -->
+        <div class="header-actions">
+            <button class="add-tab-btn" onclick="addNewTab()" title="Neuer Tab">+</button>
+            <button class="global-settings-btn" onclick="openGlobalSettings()" title="Einstellungen">⚙️</button>
+        </div>
+    </div>
+
+    <div class="content-area" id="contentArea">
+        <!-- Inhalt hier -->
+    </div>
+</div>
+
+<!-- Modal-Fenster: Globale Einstellungen -->
+<div id="modalGlobal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modalGlobal')">&times;</button>
+        <h2>Einstellungen</h2>
+        
+        <div class="setting-group">
+            <label>Design</label>
+            <select id="themeSelect" class="full-width" onchange="changeTheme(this.value)">
+                <option value="light">Hell</option>
+                <option value="dark">Dunkel</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label>Schriftgröße</label>
+            <select id="fontSizeSelect" class="full-width" onchange="changeFontSize(this.value)">
+                <option value="font-small">Klein</option>
+                <option value="font-medium">Mittel</option>
+                <option value="font-large">Groß</option>
+            </select>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        
+        <div class="setting-group">
+            <label>Datenverwaltung (Alle Tabs)</label>
+            <button class="btn-primary btn-block" onclick="exportAllData()">Alles als JSON exportieren</button>
+            <button class="btn-primary btn-block" style="background-color: #ff9800; margin-top: 10px;" onclick="document.getElementById('importAllInput').click()">Aus JSON importieren</button>
+            <input type="file" id="importAllInput" style="display:none" onchange="importAllData(this)">
+        </div>
+    </div>
+</div>
+
+<!-- Modal-Fenster: Tab-Einstellungen -->
+<div id="modalTab" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modalTab')">&times;</button>
+        <h2 id="modalTabTitle">Tab-Einstellungen</h2>
+        
+        <div class="setting-group">
+            <label>Tab-Name</label>
+            <input type="text" id="tabRenameInput" class="full-width">
+            <button class="btn-primary btn-block" style="margin-top:5px" onclick="saveTabRename()">Namen speichern</button>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+        <div class="setting-group">
+            <label>Aktionen</label>
+            <button class="btn-primary btn-block" onclick="exportCurrentTab()">Diesen Tab exportieren</button>
+            <button class="btn-primary btn-block" style="background-color: #ff9800; margin-top: 10px;" onclick="document.getElementById('importTabInput').click()">In diesen Tab importieren</button>
+            <input type="file" id="importTabInput" style="display:none" onchange="importTabData(this)">
+            
+            <button class="btn-del btn-block" style="margin-top: 20px;" onclick="deleteCurrentTab()">Tab löschen</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal-Fenster: Eintrag bearbeiten -->
+<div id="modalRowEdit" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modalRowEdit')">&times;</button>
+        <h2>Eintrag bearbeiten</h2>
+        
+        <div class="setting-group">
+            <label>Titel</label>
+            <input type="text" id="editRowTitle" class="full-width">
+        </div>
+        <div class="setting-group">
+            <label>Beschreibung</label>
+            <input type="text" id="editRowDesc" class="full-width">
+        </div>
+        <div class="setting-group">
+            <label>Link</label>
+            <input type="text" id="editRowLink" class="full-width">
+        </div>
+
+        <div class="setting-group">
+             <button class="btn-primary btn-block" onclick="saveRowEdit()">Änderungen speichern</button>
+        </div>
+    </div>
+</div>
+
+<!-- Container für Benachrichtigungen -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+    // --- Zustandsverwaltung (State Management) ---
+    const DEFAULT_DATA = [ { name: "Hauptseite", rows: [] } ];
+    const DEFAULT_SETTINGS = { theme: 'light', fontSize: 'font-medium' };
+
+    let appData = JSON.parse(localStorage.getItem('myApp_Data')) || DEFAULT_DATA;
+    let settings = JSON.parse(localStorage.getItem('myApp_Settings')) || DEFAULT_SETTINGS;
+    let activeTabIndex = 0;
+    
+    // Variable zum Speichern des Index des Tabs, dessen Einstellungen geöffnet sind
+    let editingTabIndex = -1; 
+
+    // --- Init ---
+    function init() {
+        applySettings();
+        // Datenvalidierung, falls plötzlich leere Daten ankommen
+        if (!Array.isArray(appData) || appData.length === 0) appData = DEFAULT_DATA;
+        render();
+    }
+
+    function saveAll() {
+        localStorage.setItem('myApp_Data', JSON.stringify(appData));
+        localStorage.setItem('myApp_Settings', JSON.stringify(settings));
+    }
+
+    // --- Einstellungs-Logik ---
+    function applySettings() {
+        document.documentElement.setAttribute('data-theme', settings.theme);
+        document.body.className = settings.fontSize;
+        
+        // UI-Steuerelemente im Modal aktualisieren
+        document.getElementById('themeSelect').value = settings.theme;
+        document.getElementById('fontSizeSelect').value = settings.fontSize;
+    }
+
+    function changeTheme(val) {
+        settings.theme = val;
+        applySettings();
+        saveAll();
+    }
+
+    function changeFontSize(val) {
+        settings.fontSize = val;
+        applySettings();
+        saveAll();
+    }
+
+    // --- YouTube Fetch Logik ---
+    async function fetchYoutubeTitle(url) {
+        // Einfache Überprüfung, ob der Link nach YouTube aussieht
+        if (!url.includes('youtube.com') && !url.includes('youtu.be')) return null;
+
+        try {
+            // Wir verwenden noembed.com als öffentlichen Proxy für oEmbed
+            const apiUrl = `https://noembed.com/embed?url=${encodeURIComponent(url)}`;
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            return data.title || null;
+        } catch (e) {
+            console.error("Fehler beim Abrufen des Titels:", e);
+            return null;
+        }
+    }
+
+    // --- Kernfunktionalität ---
+
+    function addNewTab() {
+        const name = prompt("Name des neuen Tabs:", "Neu");
+        if (name) {
+            appData.push({ name: name, rows: [] });
+            activeTabIndex = appData.length - 1;
+            saveAll();
+            render();
+        }
+    }
+
+    async function addRow() {
+        const titleInput = document.getElementById('inTitle');
+        const descInput = document.getElementById('inDesc');
+        const linkInput = document.getElementById('inLink');
+        const btn = document.getElementById('btnAddRow');
+
+        let title = titleInput.value.trim();
+        const link = linkInput.value.trim();
+        const desc = descInput.value.trim();
+
+        // 1. Prüfung auf Leere
+        if (!link && !title) {
+            showToast("Bitte geben Sie einen Link oder einen Titel an!", "warning");
+            return;
+        }
+
+        let finalTitle = title;
+
+        // 2. Logik zum automatischen Ausfüllen (nur wenn kein Titel, aber Link vorhanden)
+        if (!title && link) {
+            btn.innerHTML = '<span class="loading-spinner"></span>';
+            btn.disabled = true;
+
+            const fetched = await fetchYoutubeTitle(link);
+            
+            if (fetched) {
+                finalTitle = fetched;
+                showToast("Titel von YouTube abgerufen", "success");
+            } else {
+                // Wenn Abruf fehlgeschlagen oder kein YouTube
+                finalTitle = "Ohne Titel"; 
+                showToast("Titel konnte nicht automatisch abgerufen werden. Sie können den Eintrag bearbeiten.", "warning");
+            }
+
+            btn.innerHTML = 'Hinzufügen';
+            btn.disabled = false;
+        }
+
+        // Wenn der Titel immer noch leer ist (und Autoload nicht funktionierte)
+        if (!finalTitle) finalTitle = "Ohne Titel";
+
+        appData[activeTabIndex].rows.push({
+            title: finalTitle,
+            desc: desc,
+            link: link
+        });
+        
+        // Felder leeren
+        titleInput.value = '';
+        descInput.value = '';
+        linkInput.value = '';
+        
+        saveAll();
+        renderContent();
+    }
+
+    function deleteRow(index) {
+        // if(confirm("Eintrag löschen?")) { Nach Belieben aktivieren.
+        if(true) {
+            appData[activeTabIndex].rows.splice(index, 1);
+            saveAll();
+            renderContent();
+        }
+    }
+
+    // --- Tab-Einstellungs-Logik ---
+    
+    function openTabSettings(e, index) {
+        e.stopPropagation(); // Damit der Tab beim Klick auf das Zahnrad nicht wechselt
+        editingTabIndex = index;
+        document.getElementById('tabRenameInput').value = appData[index].name;
+        document.getElementById('modalTabTitle').innerText = `Tab-Einstellungen: ${appData[index].name}`;
+        
+        document.getElementById('modalTab').style.display = 'flex';
+    }
+
+    function saveTabRename() {
+        const newName = document.getElementById('tabRenameInput').value.trim();
+        if(newName) {
+            appData[editingTabIndex].name = newName;
+            saveAll();
+            renderTabs();
+            // Modal-Titel aktualisieren
+            document.getElementById('modalTabTitle').innerText = `Tab-Einstellungen: ${newName}`;
+            // Wenn wir den aktuellen Tab umbenannt haben, Input aktualisieren
+            if (editingTabIndex === activeTabIndex) renderContent();
+        }
+    }
+
+    function deleteCurrentTab() {
+        // Hier ändern, falls es nervt. Oder besser eine zusätzliche Einstellung machen.
+        if(confirm("Sind Sie sicher? Der Tab und alle Daten werden gelöscht.")) {
+            appData.splice(editingTabIndex, 1);
+            // Wenn wir den aktiven oder den davor gelöscht haben, Index korrigieren
+            if (appData.length === 0) {
+                appData.push({ name: "Hauptseite", rows: [] });
+                activeTabIndex = 0;
+            } else if (editingTabIndex <= activeTabIndex) {
+                activeTabIndex = Math.max(0, activeTabIndex - 1);
+            }
+            
+            saveAll();
+            closeModal('modalTab');
+            render();
+        }
+    }
+
+    // --- Import / Export Logik ---
+
+    function downloadJSON(data, filename) {
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function exportAllData() {
+        const date = new Date().toISOString().slice(0,10);
+        downloadJSON(appData, `my_dashboard_backup_${date}.json`);
+    }
+
+    function importAllData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const json = JSON.parse(e.target.result);
+                if (Array.isArray(json)) {
+                    if(confirm("Dies wird ALLE Ihre aktuellen Tabs ersetzen. Fortfahren?")) {
+                        appData = json;
+                        activeTabIndex = 0;
+                        saveAll();
+                        render();
+                        closeModal('modalGlobal');
+                    }
+                } else {
+                    alert("Ungültiges Dateiformat");
+                }
+            } catch (err) { alert("Fehler beim Lesen der JSON-Datei"); }
+        };
+        reader.readAsText(file);
+        input.value = ''; // Reset
+    }
+
+    function exportCurrentTab() {
+        const tab = appData[editingTabIndex];
+        const safeName = tab.name.replace(/[^a-z0-9а-яё]/gi, '_');
+        downloadJSON(tab, `tab_${safeName}.json`);
+    }
+
+    function importTabData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const json = JSON.parse(e.target.result);
+                // Prüfen, ob es eine vollständige Tab-Struktur (mit Name und rows) oder nur ein rows-Array ist?
+                // Wir unterstützen beides.
+                let rowsToAdd = [];
+                if (Array.isArray(json)) {
+                    rowsToAdd = json; // Wenn wir einfach ein Array von Einträgen importieren
+                } else if (json.rows && Array.isArray(json.rows)) {
+                    rowsToAdd = json.rows; // Wenn wir ein Tab-Objekt importieren
+                }
+
+                if (rowsToAdd.length > 0) {
+                    // Zu bestehenden Einträgen hinzufügen
+                    appData[editingTabIndex].rows = appData[editingTabIndex].rows.concat(rowsToAdd);
+                    saveAll();
+                    renderContent();
+                    alert(`Einträge importiert: ${rowsToAdd.length}`);
+                    closeModal('modalTab');
+                } else {
+                    alert("Keine Einträge in der Datei gefunden");
+                }
+            } catch (err) { alert("Fehler beim Lesen der Datei"); }
+        };
+        reader.readAsText(file);
+        input.value = '';
+    }
+
+    // --- Rendering ---
+
+    function renderTabs() {
+        const container = document.getElementById('tabsContainer');
+        container.innerHTML = '';
+        
+        appData.forEach((tab, index) => {
+            const tabDiv = document.createElement('div');
+            tabDiv.className = `tab ${index === activeTabIndex ? 'active' : ''}`;
+            
+            // Tab-Name
+            const spanName = document.createElement('span');
+            spanName.innerText = tab.name;
+            tabDiv.appendChild(spanName);
+
+            // Zahnrad-Icon im Tab
+            const gear = document.createElement('span');
+            gear.className = 'tab-settings-icon';
+            gear.innerHTML = '⚙️';
+            gear.title = 'Einstellungen für diesen Tab';
+            gear.onclick = (e) => openTabSettings(e, index);
+            tabDiv.appendChild(gear);
+
+            // Klick auf den Tab selbst
+            tabDiv.onclick = () => {
+                activeTabIndex = index;
+                render();
+            };
+
+            container.appendChild(tabDiv);
+        });
+    }
+
+    function renderContent() {
+        const container = document.getElementById('contentArea');
+        container.innerHTML = '';
+        
+        if(!appData[activeTabIndex]) return;
+        const currentTab = appData[activeTabIndex];
+
+        // Eingabefelder
+        const inputsDiv = document.createElement('div');
+        inputsDiv.className = 'input-row';
+        inputsDiv.innerHTML = `
+            <input type="text" id="inLink" placeholder="Link" style="flex:1">
+            <input type="text" id="inTitle" placeholder="Titel" style="flex:1">
+            <input type="text" id="inDesc" placeholder="Beschreibung" style="flex:2">
+            <button class="btn-primary" id="btnAddRow" onclick="addRow()">Hinzufügen</button>
+        `;
+        container.appendChild(inputsDiv);
+
+        // Tabelle
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th style="width: 50px;" class="col-center">Nr.</th>
+                    <th style="width: 25%;">Titel</th>
+                    <th>Beschreibung</th>
+                    <th style="width: 10%;" class="col-center">Link</th>
+                    <th style="width: 80px;" class="col-center">Aktion</th>
+                </tr>
+            </thead>
+        `;
+        const tbody = document.createElement('tbody');
+        
+        if (currentTab.rows.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:gray">Tab ist leer</td></tr>`;
+        } else {
+            currentTab.rows.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                
+                let linkHtml = row.link ? `<a href="${row.link}" target="_blank" class="table-link">Öffnen</a>` : '-';
+                
+                tr.innerHTML = `
+                    <td class="col-center">${idx + 1}</td>
+                    <td><strong>${row.title}</strong></td>
+                    <td class="col-desc">${row.desc}</td>
+                    <td class="col-center">${linkHtml}</td>
+                    <td class="col-center">
+                        <div class="row-actions">
+                            <button class="btn-icon" title="Bearbeiten" onclick="openRowEdit(${idx})">⚙️</button>
+                            <button class="btn-icon" title="Löschen" style="color:#ff5252" onclick="deleteRow(${idx})">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        table.appendChild(tbody);
+        container.appendChild(table);
+    }
+
+    function render() {
+        renderTabs();
+        renderContent();
+    }
+
+    // --- Modal-Hilfsfunktionen ---
+    function openGlobalSettings() {
+        document.getElementById('modalGlobal').style.display = 'flex';
+    }
+    
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // Schließen beim Klick außerhalb des Modals. Auskommentieren, wenn es nervt~ 
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = "none";
+        }
+    }
+
+    // --- Benachrichtigungs-Logik ---
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerText = message;
+        
+        container.appendChild(toast);
+
+        // Entfernen nach 2 Sekunden
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300); // Warten auf das Ende der Ausblendanimation
+        }, 2000);
+    }
+
+    // --- Zeilenbearbeitungs-Logik ---
+    let editingRowIndex = -1;
+
+    function openRowEdit(index) {
+        editingRowIndex = index;
+        const row = appData[activeTabIndex].rows[index];
+        
+        document.getElementById('editRowTitle').value = row.title;
+        document.getElementById('editRowDesc').value = row.desc;
+        document.getElementById('editRowLink').value = row.link;
+        
+        document.getElementById('modalRowEdit').style.display = 'flex';
+    }
+
+    function saveRowEdit() {
+        if (editingRowIndex === -1) return;
+
+        const newTitle = document.getElementById('editRowTitle').value.trim();
+        const newDesc = document.getElementById('editRowDesc').value.trim();
+        const newLink = document.getElementById('editRowLink').value.trim();
+
+        if (!newTitle && !newLink) {
+            showToast("Sie müssen mindestens Titel oder Link ausfüllen", "error");
+            return;
+        }
+
+        appData[activeTabIndex].rows[editingRowIndex] = {
+            title: newTitle || "Ohne Titel",
+            desc: newDesc,
+            link: newLink
+        };
+
+        saveAll();
+        renderContent();
+        closeModal('modalRowEdit');
+        showToast("Eintrag aktualisiert", "success");
+    }
+
+    // --- Horizontales Scrollen mit dem Mausrad ---
+    const tabsContainer = document.getElementById('tabsContainer');
+    
+    tabsContainer.addEventListener('wheel', (evt) => {
+        // Wenn der Inhalt kleiner als die Fensterbreite ist, ist kein Scrollen erforderlich
+        if (tabsContainer.scrollWidth <= tabsContainer.clientWidth) return;
+
+        evt.preventDefault();
+        // Horizontales Scrollen um den Betrag des vertikalen Scrollens
+        tabsContainer.scrollLeft += evt.deltaY;
+    });
+
+    // Start
+    init();
+</script>
+
+</body>
+</html>
