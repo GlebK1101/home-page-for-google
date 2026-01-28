@@ -1,40 +1,44 @@
 # home-page-for-google
-Персонализированная стартовая страница для организации закладок. Позволяет организовывать ссылки и заметки в таблицы по вкладкам. Особенности: темная/светлая темы, авто-получение названий YouTube-видео, экспорт/импорт данных (JSON), редактирование записей. Работает без сервера на LocalStorage — просто откройте файл в Chrome.
+A personalized start page for organizing bookmarks. Organize links and notes into tables within tabs. Features: dark/light themes, auto-fetch YouTube titles, data export/import (JSON), and record editing. Works locally on LocalStorage without a server — just open the file in Chrome.
 
-## Простой и удобный инструмент для организации ваших закладок, ссылок и заметок. Работает локально в браузере, без серверов и регистрации.
-### Проблема: «Вкладочное безумие»
-У всех нас это было: вы открываете браузер, и там висит 50 открытых вкладок.
-- "Эту статью я прочитаю позже".
-- "Это видео надо глянуть вечером".
-- "А эта ссылка нужна мне для работы на следующей неделе".
+## A simple and convenient tool for organizing your bookmarks, links, and notes. Works locally in the browser, no servers or registration required.
 
-В итоге: браузер тормозит, оперативная память съедается, а найти нужную ссылку в этой каше невозможно. Вы боитесь закрыть вкладку, чтобы не потерять её навсегда. *(да, я знаю про возможжности закладок, но речь не о них)*
-### Решение
-Этот проект — один HTML-файл, который заменяет вам стандартную стартовую страницу.
-Вместо того чтобы держать вкладку открытой, вы просто копируете ссылку сюда, добавляете заметку и **со спокойной душой закрываете вкладку**. Все ваши ссылки аккуратно разложены по полочкам (табам), а браузер работает быстро.
-### Возможности
-1. **Организация по вкладкам**: Создавайте категории (например: "Работа", "YouTube", "Рецепты", "Почитать").
-2. **Умное добавление**: Вставьте ссылку на YouTube, и название видео подтянется автоматически.
-3. **Приватность**: Все данные хранятся только в вашем браузере (LocalStorage). Никаких отправок данных на сторонние сервера.
-4. **Кастомизация**: Тёмная и светлая темы, настройка размера шрифта.
-5. **Безопасность данных**: Функция экспорта и импорта всех данных в JSON файл (удобно для переноса на другой ПК или создания бэкапа).
-6. **Никакой установки**: Просто скачайте файл и откройте его в браузере.
-### Как запустить
-1. Скачайте файл index.html из этого репозитория.
-2. Откройте его в Google Chrome (или любом другом браузере).
-3. *(Рекомендуется)* Зайдите в настройки браузера *(три точки -> appearance -> show home button [On])* и установите этот файл как **Домашнюю страницу**.
+### The Problem: "Tab Madness"
+We've all been there: you open your browser, and there are 50 tabs staring back at you.
+- "I'll read this article later."
+- "I need to watch this video tonight."
+- "I need this link for work next week."
 
-### Что вам нужно знать
-1. **Не чистите «Данные сайтов» бездумно**: Если вы решите очистить историю браузера и поставите галочку напротив *"Файлы cookie и другие данные сайтов"*, ваши записи удалятся.
-2. **Режим Инкогнито**: Если вы откроете файл в режиме Инкогнито, записи, сделанные там, исчезнут сразу после закрытия окна.
-3. **Разные браузеры = Разные данные**: Если вы откроете файл в Chrome, а потом в Firefox — вы увидите пустую страницу в Firefox. Данные привязаны к конкретному браузеру.
+**Result:** the browser lags, RAM is eaten up, and finding the right link in this mess is impossible. You're afraid to close a tab lest you lose it forever. *(Yes, I know about standard bookmarks, but this isn't about them).*
 
-### Как себя обезопасить
-В проекте есть встроенная функция резервного копирования:
-1. Нажмите на большую шестеренку (Настройки).
-2. Нажмите "Экспорт всего в JSON".
-3. Сохраните файл к себе на компьютер.
+### The Solution
+This project is a **single HTML file** that replaces your standard start page.
+Instead of keeping a tab open, you simply copy the link here, add a note, and **close the tab with peace of mind**. All your links are neatly sorted into shelves (tabs), and your browser runs fast.
 
-Аналогично такая же функция есть и для каждой вкладки в отдельности.
+### Features
+1. **Organization by Tabs**: Create categories (e.g., "Work", "YouTube", "Recipes", "Read Later").
+2. **Smart Add**: Paste a YouTube link, and the video title fetches automatically.
+3. **Privacy**: All data is stored *only* in your browser (LocalStorage). No data is sent to third-party servers.
+4. **Customization**: Dark and Light themes, font size settings.
+5. **Data Safety**: Export and Import all data to a JSON file (useful for transferring to another PC or creating a backup).
+6. **No Installation**: Just download the file and open it in your browser.
 
-Наслаждайтесь порядком!
+### How to Run
+1. Download the `index.html` file from this repository.
+2. Open it in Google Chrome (or any other browser).
+3. *(Recommended)* Go to browser settings *(three dots -> Appearance -> Show home button [On])* and set this file as your **Home Page**.
+
+### Important: What You Need to Know
+1. **Don't clear "Site Data" thoughtlessly**: If you decide to clear browser history and check *"Cookies and other site data"*, your records will be deleted.
+2. **Incognito Mode**: If you open the file in Incognito mode, records made there will vanish immediately after closing the window.
+3. **Different Browsers = Different Data**: If you open the file in Chrome, then in Firefox, you will see a blank page in Firefox. Data is tied to the specific browser.
+
+### How to Keep Data Safe
+The project has a built-in backup function:
+1. Click the large gear icon (Settings).
+2. Click "Export all to JSON".
+3. Save the file to your computer.
+
+*There is also a similar export function for each individual tab.*
+
+Enjoy the order!
